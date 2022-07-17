@@ -1,0 +1,294 @@
+\documentclass{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+%\setbeamertemplate{frame numbering}[fraction]
+\useoutertheme{metropolis}
+\useinnertheme{metropolis}
+\usefonttheme{metropolis}
+\usecolortheme{spruce}
+\setbeamercolor{background canvas}{bg=white}
+
+\usepackage{listings}
+% storing our images
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+%Information to be included in the title page:
+\title{Building SCaLE's OpenWrt Conference WiFi}
+\subtitle{Yes...The very network you're connected to right now}
+\author{
+  Robert Hernandez \\
+  CTO @ Nebulaworks \\
+  @sarcasticadmin
+}
+\date{July 2022}
+
+\setbeameroption{hide notes} % Only slides
+%\setbeameroption{show only notes} % Only notes
+%\setbeameroption{show notes on second screen=right} % Both
+
+%\setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+
+\begin{document}
+\metroset{block=fill}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Tech Team}
+  %{\large \textbf{SCaLE Tech Team}}
+  \begin{center}
+    \includegraphics[scale=.5]{scale-tech}
+  \end{center}
+  \note[item]{SCaLE is run by many volunteers and traditionally the scale-network team provides this service}
+  \note[item]{Our tech team is made up by 10 dedicated team members who have been dedicated to the conference for many years}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why}
+  \begin{center}
+  {\large \textbf{Conference attendees need WiFi} \\[20pt]}
+  \includegraphics[scale=.5]{wifi-signage}
+  \end{center}
+  \note[item]{And countless options to choose from: many propertary and only a few open}
+  \note[item]{SCaLE is run by many volunteers and traditionally the scale-network team provides this service}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{History}
+  % Alert to highlight each part of the timeline
+  \begin{itemize}[<alert@+>]
+    % TODO: What about prior years?
+    \item Jan 2017 - "Does anyone know how to build OpenWrt?"
+  \note[item]{During one of my first conference calls on the tech team prior to SCaLE 15x in Jan 2017}
+  \note[item]{Previous Tech Team was no more and everyone was new for the coming year}
+  \note[item]{Bare minimum for SCaLE 15x but config was kept}
+    \onslide<2->{
+    \item March 2017 - SCaLE 15x
+    }
+  \onslide<3->{
+  \item Sept 2017 - Decision to stick with OpenWrt
+  }
+  \onslide<4->{
+  \item July 2022 - SCaLE 19x
+  }
+  \end{itemize}
+  \note[item]{This led to 5 years of iteration by the entire Tech Team}
+  \note[item]{Many of the things Ill be covering were built out of necessity and in an effort to provide a reliable network come show time}
+\end{frame}
+
+% TODO: Where to put "how" might need to be before history
+\begin{frame}
+\frametitle{Hardware}
+  \begin{center}
+    {\large \textbf{ \textasciitilde 120 consumer "routers"} \\[20pt]}
+    \small{
+    \begin{tabular}{| l | l | l | l | l |}
+      \hline
+      Model & WiFi Chipsets & 2.4 GHz & 5 GHz & RAM \\ \hline
+      Netgear 3700v2 & Ath AR9220 + AR9223  & b/g/n & a/n & 64MB \\ \hline
+      Netgear 3800[CH] & Ath AR9220 + AR9223 & b/g/n & a/n & 64MB \\ \hline
+    \end{tabular} \\[20pt]
+    }
+  \includegraphics[scale=.3]{wndr3700_v2}
+  \end{center}
+  \note[item]{Netgear 3700v2 and 3800 series}
+  \note[item]{We do have support the TPlink C2600 but wireless driver support has been unreliable of the past couple of years}
+\end{frame}
+
+\begin{frame}
+\frametitle{Repo}
+  \begin{center}
+  {\large \textbf{https://github.com/socallinuxexpo/scale-network}}
+  \end{center}
+  \note[item]{SCaLE techs single source of truth for all deployments}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Build}
+  {\large \textbf{SCaLE's OpenWrt image}} \\[20pt]
+  \begin{block}{16MB max}
+    Kernel: Linux 5.10.89 2022 mips GNU/Linux \\
+  Pkgs: Bash, Python, OpenSSH, lldp, tcpdump, rsyslog, apinger, zabbix \\
+  Files: Openwrt Configs, ssh keys, etc.
+  \end{block}
+  Removed: luci, dropbear, dnsmasq, logd \\[20pt]
+
+  \note[item]{openwrt is built of snapshots of upstream master for both kernel and packages}
+  \note[item]{periodically bumped throughout the year}
+  \note[item]{limited to 16MB on netgears}
+  \note[item]{unnecessary packages and defaults are stripped out [luci, nat, etc.]}
+  \note[item]{Bash, Python, OpenSSH, tcpdump, zabbix, rsyslog installed via opkg at image build time}
+  \note[item]{mixin config files via templating process}
+\end{frame}
+
+% TODO: How to convey the image of massflash
+\begin{frame}
+  \frametitle{Flash}
+    \only<1>{\line(1,0){50}}
+    \only<2>{\textcolor{red}{Traditional}}
+  \note[item]{manual setup, paperclip and detection of flash process}
+    \only<3>{
+    \begin{center}
+      \includegraphics[scale=.25]{wifi-hard-reset}
+    \end{center}
+    }
+    \only<4>{\textcolor{orange}{Solo}}
+  \note[item]{expect script that waits for signals from AP that its in the proper mode}
+    \only<5>{
+      \textcolor{green}{Mass}
+    }
+    \only<9>{\textcolor{green}{Autoflash}}
+  \note[item]{Tease this and mention that well discuss this last option later when we discuss testing}
+  \only<1,2,4,5,9>{OpenWrt Flash}
+  \only<6>{
+    \begin{center}
+      \includegraphics[scale=.25]{massflash-1}
+    \end{center}
+  }
+  \only<7>{
+    \begin{center}
+      \includegraphics[scale=.25]{massflash-2}
+    \end{center}
+  }
+  \only<8>{
+    \begin{center}
+      \includegraphics[scale=.25]{massflash-3}
+    \end{center}
+  }
+  \note[item]{Requires openwrt and SSH access to the hardware}
+  \note[item]{Via DHCP lease event then SCP and trigger reflash of hardware}
+  \note[item]{Reflash fleet of 100 APs in 2 hours}
+  \note[item]{Limited by switch ports and power strips}
+  \note[item]{Consistent, prior we often werent sure if image was flashed}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Management}
+  {\large \textbf{SCaLE's OpenWrt management} \\[20pt]}
+  \begin{itemize}
+    \item Custom DHCP options: WiFi Channels and Network Config
+    \item Re-flash APs for any major system updates
+    \item SSH
+    \item Rsyslog and zabbix for observability 
+  \end{itemize}
+  \note[item]{Leverage custom DHCP options and scripts local to the AP}
+  \note[item]{Network trunks and bridges are configured to accomediate all SCaLE needs (N buildins, etc.)}
+  \note[item]{WiFi Channel info, network config provided via DHCP options}
+  \note[item]{Anything adhoc is dealt with via SSH}
+  \note[item]{Reflash APs for any major changes to configuration}
+  \note[item]{mixin config files}
+\end{frame}
+
+\begin{frame}[label=foo]
+  \frametitle{Automated Testing}
+    \only<1>{
+      {\large \textbf{Golden Tests}} \\[20pt]
+      \lstinputlisting[language=bash]{snippets/golden.sh}
+    }
+    \only<2-4>{
+      {\large \textbf{Weekly Image Build}} \\[20pt]
+    }
+    \only<3>{
+      \includegraphics[scale=.1]{build-weekly-2}
+    }
+    \only<4>{
+      \includegraphics[scale=.1]{build-weekly-1}
+    }
+    \note[item]{Ensure that existing upstream sources still build correctly}
+    
+  %\item<1,2> 
+  %\note[item]{Check templated configuration against expected outputs in our CI}
+    \only<5>{
+      {\large \textbf{Serverspec}} \\[20pt]
+      \lstinputlisting[language=ruby]{snippets/serverspec.rb}
+    }
+    \only<6>{
+      {\large \textbf{Autoflash}} \\[20pt]
+    }
+    \only<7>{
+      {\large \textbf{Autoflash}} \\[20pt]
+      \begin{block}{Configuration}
+      \small
+      Hardware: Raspberry Pi 4, Relay, USB Ethernet Adapter, AP Board  \\
+      Software: FreeBSD 13, GitLab runner, magic wormhole, and expect
+      \end{block}
+    }
+    \only<8>{
+      \includegraphics[scale=.05]{autoflash-1}
+    }
+    \only<9>{
+      \includegraphics[scale=.05]{autoflash-2}
+    }
+    \only<10>{
+      \includegraphics[scale=.05]{autoflash-3}
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Radio Testing}
+  \begin{enumerate}
+      \item iperf
+      \item Dogfooding
+      \item Surveying
+  \note[item]{WiFi driver performance and stability is tested by contributors dogfooding the configuration throghout the year}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Impact}
+  \begin{itemize}
+    \item Stable platform for the conference
+    \item Saves an entire day during show prep 
+    \item Autoflash decreased feedback loops from 20+min to 5 min per test
+    \item 52 serverspec tests being checked on all images
+    \item Enables expanding AP hardware to support more than 1 model with limited overhead
+  \end{itemize}
+  \note[item]{}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Errata @ 19x}
+  \begin{itemize}
+    \item WiFi radios remaining up if initial boot had no connectivity
+    \item DHCP reservations mismatches and range overlap
+    \item DNS ACL assumptions for Pasadena Convention Center
+  \end{itemize}
+  \note[item]{}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Future}
+  \begin{itemize}
+    \item Belkin RT3200: WiFi 6
+    \item DAWN: https://github.com/berlin-open-wireless-lab/DAWN
+    \item Automated client WiFi testing in CI
+    \item Advanced surveying process
+  \end{itemize}
+  \note[item]{DAWN works best with networks where AP and devices have 802.11k capabilities for discovering the quality of radio signals, plus 802.11v for requesting devices to move to a different AP.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Repo}
+  \begin{center}
+  {\large \textbf{https://github.com/socallinuxexpo/scale-network}}
+  \end{center}
+  \note[item]{SCaLE techs single source of truth for all deployments}
+\end{frame}
+
+\begin{frame}
+\frametitle{This talk}
+  \begin{center}
+  {\large \textbf{https://github.com/sarcasticadmin/talks}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{End}
+  \begin{center}
+  {\large \textbf{Thank you}}
+  \end{center}
+\end{frame}
+
+\end{document}
