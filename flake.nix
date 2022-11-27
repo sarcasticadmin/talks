@@ -26,8 +26,14 @@
               multirow
               ;
           };
+          simple-slides = final.callPackage ./simple/default.nix { };
           openwrt-at-scale = final.callPackage ./openwrt-at-scale/default.nix { };
         });
+
+        packages.x86_64-linux = {
+                import nixpkgs { system = "x86_64-linux"; overlays = [ self.overlay ]; };
+        inherit simple-slides;
+      };
 
       devShells.x86_64-linux =
         {

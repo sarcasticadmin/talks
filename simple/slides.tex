@@ -1,0 +1,46 @@
+\documentclass{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+%\setbeamertemplate{frame numbering}[fraction]
+\useoutertheme{metropolis}
+\useinnertheme{metropolis}
+\usefonttheme{metropolis}
+\usecolortheme{spruce}
+\setbeamercolor{background canvas}{bg=white}
+
+\usepackage{listings}
+% storing our images
+
+%Information to be included in the title page:
+\title{Simple Example Talk}
+\subtitle{Testing tex and beamer compilation}
+\author{
+  Robert Hernandez \\
+}
+\date{Jan 1970}
+
+\setbeameroption{hide notes} % Only slides
+%\setbeameroption{show only notes} % Only notes
+%\setbeameroption{show notes on second screen=right} % Both
+
+%\setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+
+\begin{document}
+\metroset{block=fill}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{This talk}
+  \begin{center}
+  {\large \textbf{https://github.com/sarcasticadmin/talks}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{End}
+  \begin{center}
+  {\large \textbf{Thank you}}
+  \end{center}
+\end{frame}
+
+\end{document}
