@@ -1,30 +1,18 @@
-let
-  pkgs = import <nixpkgs> {};
+{ texLive, rubber, stdenv, lib }:
 
-  # https://ctan.org/ for what to combine in texlive
-  texlive = pkgs.texlive.combine {
-    inherit (pkgs.texlive)
-    scheme-small
-    beamer
-    # Theme reqs
-    beamertheme-metropolis
-    pgfopts
-    multirow
-    ;
-  };
-in {
-  slides = pkgs.stdenv.mkDerivation {
-    name = "slides";
-    src = ./.;
+stdenv.mkDerivation {
+  pname = "openwrt-at-scale";
+  version = "2022-09-31";
 
-    buildInputs = [
-      texlive
-      pkgs.rubber
-    ];
+  src = ./.;
 
-    installPhase = ''
-      mkdir -p $out
-      cp slides.pdf $out/
-    '';
-  };
+  buildInputs = [
+    texLive
+    rubber
+  ];
+
+  installPhase = ''
+    mkdir -p $out
+    cp slides.pdf $out/
+  '';
 }
