@@ -50,6 +50,20 @@
               rubber
             ];
           };
+          release =
+            let
+              ciRelease = pkgs.writeScriptBin "ci-release" ''
+                test ! -z $RELEASE_TAG || { echo "Please set RELEASE_TAG variable"; exit 1; }
+                nix build '.#all-slides'
+                gh release create $RELEASE_TAG result/**/*.pdf -t "$RELEASE_TAG" --notes ""
+              '';
+            in
+            pkgs.mkShell {
+              buildInputs = with pkgs;[
+                gh
+              ] ++ [ ciRelease ];
+            };
+
         });
     };
   # Bold green prompt for `nix develop`
