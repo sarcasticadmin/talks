@@ -1,8 +1,8 @@
 { texLive, rubber, stdenv, lib }:
 
 stdenv.mkDerivation {
-  pname = "openwrt-at-scale";
-  version = "2022-09-31";
+  pname = "simple-slides";
+  version = "1970-01-01";
 
   src = ./.;
 
