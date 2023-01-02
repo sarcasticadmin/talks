@@ -13,6 +13,6 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out
-    cp slides.pdf $out/
+    cp slides.pdf $out/$pname-slides.pdf
   '';
 }
