@@ -1,7 +1,7 @@
 { texLive, rubber, stdenv, lib }:
 
 stdenv.mkDerivation {
-  pname = "simple-slides";
+  pname = "simple";
   version = "1970-01-01";
 
   src = ./.;
@@ -13,6 +13,6 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out
-    cp slides.pdf $out/
+    cp slides.pdf $out/$pname-slides.pdf
   '';
 }

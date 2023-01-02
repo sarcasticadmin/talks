@@ -1,0 +1,22 @@
+---
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  releaser:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: install-nix
+        uses: cachix/install-nix-action@v18
+      - name: create-release-with-artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          RELEASE_TAG: ${{github.ref_name}}
+        run:
+           nix develop .#release --command ci-release
