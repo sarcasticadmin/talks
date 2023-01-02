@@ -31,10 +31,12 @@
           };
           simple-slides = final.callPackage ./simple/default.nix { };
           openwrt-at-scale = final.callPackage ./openwrt-at-scale/default.nix { };
+          all-slides = final.linkFarmFromDrvs "all-slides" [ simple-slides openwrt-at-scale ];
+
         };
 
       packages = forAllSystems (system: {
-        inherit (nixpkgsFor.${system}) simple-slides openwrt-at-scale;
+        inherit (nixpkgsFor.${system}) simple-slides openwrt-at-scale all-slides;
       });
 
       devShells = forAllSystems (system:
