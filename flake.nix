@@ -50,6 +50,12 @@
               rubber
             ];
           };
+          present =
+            pkgs.mkShell {
+              buildInputs = with pkgs;[
+                pdfpc
+              ];
+            };
           release =
             let
               ciRelease = pkgs.writeScriptBin "ci-release" ''
