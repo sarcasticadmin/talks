@@ -1,7 +1,7 @@
 \documentclass[aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usetheme[darkmode]{pureminimalistic}
+\usetheme[darkmode, nofooter]{pureminimalistic}
 %\setbeamertemplate{frame numbering}[fraction]
 %\useoutertheme{pureminimalistic}
 %\useinnertheme{pureminimalistic}
@@ -40,10 +40,134 @@
 \maketitle
 
 \begin{frame}
-\frametitle{Tech Team}
-  %{\large \textbf{SCaLE Tech Team}}
-  \note[item]{SCaLE is run by many volunteers and traditionally the scale-network team provides this service}
-  \note[item]{Our tech team is made up by 10 dedicated team members who have been dedicated to the conference for many years}
+  % WIP
+  Imagine a world where you can control and verify the packets of your most critical distributed systems.
+  \note[item]{}
+\end{frame}
+
+\begin{frame}
+\frametitle{Agenda}
+  \begin{itemize}[<alert@+>]
+    \item Message Bus Overview
+    \item SCiON Overview
+    \item Porting NATS to SCiON
+    \item Results \& Next Steps
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{Message Bus}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+%TODO: Add graphic of message bus
+\frametitle{What is a Message Bus?}
+  Infrastructure that allows different systems to communicate through a shared interfaces via messages
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+%TODO: Add graphic of message bus
+\frametitle{Message Bus Benefits}
+  % Refs: https://www.youtube.com/watch?v=ZwZvQIuX0AU
+  \begin{itemize}[<alert@+>]
+    \item A common communication platform for messages
+    \note[item]{}
+    \onslide<2->{
+    \item Authentication \& Authorization
+    }
+  \onslide<3->{
+  \item Congestion Control
+  }
+  \onslide<4->{
+  \item Prioritization
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{Challenges when operating a message bus}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Network Security}
+    \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \pause
+        Challenge:
+        \begin{itemize}
+            \item<3-> Cluster Communications
+            \item<5-> Client Authenticity
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+        Solutions:
+        \pause
+        \begin{itemize}
+            \item<4-> Private Networks, VPNs, Whitelists
+            \item<6-> PKI, Shared Tokens
+        \end{itemize}
+    \end{column}
+  \end{columns}
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+\frametitle{CAP Theorem}
+  No distributed system is safe from network failures, thus network partitioning generally has to be tolerated. In the presence of a partition, one is then left with two options: consistency or availability.
+  \newline
+  \begin{itemize}[<alert@+>]
+    \item Consistency
+    \note[item]{}
+    \onslide<2->{
+    \item Availability
+    }
+  \onslide<3->{
+  \item Partition Tolerance
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{What if we could make the network more reliable and secure?}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    %add logo
+    \Huge{SCiON}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What's SCiON?}
+  SCION is the first clean-slate Internet architecture designed to provide route control, failure isolation, and explicit trust information for end-to-end communication.
+\end{frame}
+
+\begin{frame}
+\frametitle{SCiON Capabilities}
+  \begin{itemize}[<alert@+>]
+    \item Security: Authenticated Control Plane and Resilience Against Path Hijacks
+    \note[item]{}
+    \onslide<2->{
+    \item Stability: Native multipath capability at the network level with rapid path failover
+    }
+  \onslide<3->{
+  \item Control: Path-awareness for end posts
+  }
+  \onslide<4->{
+  \item Protection: Hidden paths and sender-based path selection
+  }
+  \onslide<5->{
+  \item Performance: SCiON applications can select best paths based on latency, bandwidth, and other criteria
+  }
+  \end{itemize}
 \end{frame}
 
 \end{document}
