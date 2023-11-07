@@ -17,8 +17,10 @@
 %Information to be included in the title page:
 \title[Default Options]{The NATS Message Bus on the SCiON Internet Architecture }
 \author{
-  Robert Hernandez \\
-  @sarcasticadmin
+  Robert Hernandez
+}
+\institute{
+  Martincoit Networks
 }
 \date{March 2023}
 
@@ -152,22 +154,141 @@
 
 \begin{frame}
 \frametitle{SCiON Capabilities}
+  % TODO: Incorprate busines value to each capability, maybe a grid?
   \begin{itemize}[<alert@+>]
     \item Security: Authenticated Control Plane and Resilience Against Path Hijacks
     \note[item]{}
     \onslide<2->{
     \item Stability: Native multipath capability at the network level with rapid path failover
     }
-  \onslide<3->{
-  \item Control: Path-awareness for end posts
-  }
-  \onslide<4->{
-  \item Protection: Hidden paths and sender-based path selection
-  }
-  \onslide<5->{
-  \item Performance: SCiON applications can select best paths based on latency, bandwidth, and other criteria
-  }
+    \onslide<3->{
+    \item Control: Path-awareness for end hosts
+    }
+    \onslide<4->{
+    \item Protection: Hidden paths and sender-based path selection
+    }
+    \onslide<5->{
+    \item Performance: SCiON applications can select the best paths based on latency, bandwidth, and other criteria
+    }
   \end{itemize}
 \end{frame}
 
+\begin{frame}[c]
+  \begin{center}
+    %add logo
+    \Huge{Porting NATS to SCiON}
+  \note[item]{Combining the NATS message bus with SCiON}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{NATS Evaluation}
+    \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \pause
+        Pros:
+        \begin{itemize}
+            \item<3-> Golang 
+            \item<4-> Active Development
+            \item<5-> Short list of dependencies
+            \item<6-> Clean codebase
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+        Cons:
+        \pause
+        \begin{itemize}
+            \item<7-> TCP-only
+            \item<8-> URL Formatting configurations: "nats://..."
+            \item<9-> Multiple Server Components
+        \end{itemize}
+    \end{column}
+  \end{columns}
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+\frametitle{SCiON NATS Current State}
+  \begin{itemize}[<+->]
+    % TODO: Add a note about Pan QUIC
+    \onslide<1->{
+    \item NATS is SCiON enabled via Path-aware SCiON Library
+    }
+    \note[item]{}
+    \onslide<2->{
+    \begin{itemize}
+    % Show an example per each part of the port
+    \item<.-> NATS Client
+    \item<.-> NATS Server
+    \item<.-> NATS Server Clustering
+    }
+    \end{itemize}
+    \onslide<3->{
+    % Show an example
+    \item URL portablility has a few shortcomings
+    }
+    \onslide<4->{
+    \item Maintained fork of upstream NATS
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    % Need to gather some metrics
+    \Huge{Results}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    % show a SCiON topology with multiple hops:
+    % 1) Simulate a failure
+    % 2) Introduce less than ideal conditions into a link
+    \Huge{Demo}
+  \end{center}
+\end{frame}
+
+\iffalse
+\fi
+\begin{frame}
+\frametitle{Whats Next - Nats Project}
+  \begin{itemize}[<+->]
+    \onslide<1->{
+    \item SCiON enabled NATS service
+    }
+    \onslide<2->{
+    \item NATS Server "customDialer"
+    \note[item]{Upstream these changes, ideal via the customDialer}
+    }
+    \onslide<3->{
+    \item Support the full set of NATS server capabilities: e.g. SuperCluster
+    }
+    \onslide<4->{
+    \item Multipath Support for NATS Control \& Data Plane
+    \note[item]{imagine being able to send control plane messages via low latency links and data plane traffic via high bandwidth links}
+    }
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Whats Next - SCiON}
+  \begin{itemize}[<+->]
+    \onslide<1->{
+    \item Application Porting Guide
+    }
+    \onslide<2->{
+    \item Dedicated PAN Library
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions}
+  {\large \textbf{@sarcasticadmin}}
+  \newline
+  \newline
+  {\large \textbf{https://github.com/MartincoitNetworks/nats-server/tree/rmain}}
+\end{frame}
 \end{document}
