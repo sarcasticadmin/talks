@@ -20,18 +20,13 @@ Building and operating reliable distributed systems is an ongoing challenge. Thi
 in a distributed system that traverses a wide area network like the public internet where traffic disruptions
 and recovery arent self determinate.
 
-NATS provides a system that's easier than most other distributed systems.
+Neural Autonomic Transport System (NATS) is an established, distributed messaging system that's operates in a wide range
+of use cases. What improvements are possible to the underlying network that this distributed system relies upon?
 
-When message traffic inevitably traverses a wide area network like the public
-internet and BGP, y more variability is injected into message delivery.
-
-
-What if there was a way to improve upon the underlying network connectivity that a
-distributed system relies upon? The SCiON (Scalability, Control, and Isolation On Next-Generation Networks)
+The SCiON (Scalability, Control, and Isolation On Next-Generation Networks)
 Internet Architecture aims to offer secure, highly available, and efficient point-to-point packet delivery
-via a path-aware network. What's required to port over an existing distributed system technology to use such
-a network? Port NATS to run on top of SCiON, what were the realized benefits in practice? Was NATS more available
-and robust than it would have been in a traditional wide area network?
+via a path-aware network (PAN). What was required to port NATS to use SCiON natively?
+What were the results in practice over a traditional wide area network and BGP?
 
 ## Short Abstract
 
