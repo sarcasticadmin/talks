@@ -10,6 +10,12 @@
 %\setbeamercolor{background canvas}{bg=white}
 
 \usepackage{listings}
+\lstset{language=Go,
+  basicstyle=\ttfamily\tiny,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  commentstyle=\color{green}\ttfamily}
+
 % storing our images
 \usepackage{graphicx}
 \graphicspath{{./images/}}
@@ -207,6 +213,12 @@
   \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
 \end{frame}
 
+\begin{frame}
+\frametitle{URL Formatting}
+  %\begin{center}
+    \lstinputlisting{snippets/mangledurl.go}
+  %\end{center}
+\end{frame}
 \begin{frame}
 \frametitle{SCiON NATS Current State}
   \begin{itemize}[<+->]
