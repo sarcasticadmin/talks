@@ -1,0 +1,337 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme[darkmode, nofooter]{pureminimalistic}
+%\setbeamertemplate{frame numbering}[fraction]
+%\useoutertheme{pureminimalistic}
+%\useinnertheme{pureminimalistic}
+%\usefonttheme{pureminimalistic}
+%\usecolortheme{spruce}
+%\setbeamercolor{background canvas}{bg=white}
+
+\usepackage{listings}
+\lstset{language=Go,
+  numbers=left,
+  tabsize=2,
+  basicstyle=\ttfamily\tiny,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  commentstyle=\color{green}\ttfamily}
+
+% storing our images
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+%Information to be included in the title page:
+\title[Default Options]{The NATS Message Bus on the SCiON Internet Architecture }
+\author{
+  Robert Hernandez
+}
+\institute{
+  Martincoit Networks
+}
+\date{March 2023}
+
+\setbeameroption{hide notes} % Only slides
+%\setbeameroption{show only notes} % Only notes
+%\setbeameroption{show notes on second screen=right} % Both
+
+%\setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+
+\renewcommand{\logotitle}{\includegraphics%
+  [width=.2\linewidth]{images/martincoit.png}}
+\renewcommand{\logoheader}{\includegraphics%
+  [width=.5\linewidth]{images/martincoit.png}}
+\renewcommand{\logofooter}{\includegraphics%
+  [width=.15\linewidth]{images/martincoit.png}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+  % WIP
+  Imagine a world where you can control and verify the packets of your most critical distributed systems.
+  \note[item]{}
+\end{frame}
+
+\begin{frame}
+\frametitle{Agenda}
+  \begin{itemize}[<alert@+>]
+    \item Message Bus Overview
+    \item SCiON Overview
+    \item Porting NATS to SCiON
+    \item Results \& Next Steps
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{Message Bus}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+%TODO: Add graphic of message bus
+\frametitle{What is a Message Bus?}
+  Infrastructure that allows different systems to communicate through a shared interfaces via messages
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+%TODO: Add graphic of message bus
+\frametitle{Message Bus Benefits}
+  % Refs: https://www.youtube.com/watch?v=ZwZvQIuX0AU
+  \begin{itemize}[<alert@+>]
+    \item A common communication platform for messages
+    \note[item]{}
+    \onslide<2->{
+    \item Authentication \& Authorization
+    }
+  \onslide<3->{
+  \item Congestion Control
+  }
+  \onslide<4->{
+  \item Prioritization
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{Challenges when operating a message bus}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Network Security}
+    \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \pause
+        Challenge:
+        \begin{itemize}
+            \item<3-> Cluster Communications
+            \item<5-> Client Authenticity
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+        Solutions:
+        \pause
+        \begin{itemize}
+            \item<4-> Private Networks, VPNs, Whitelists
+            \item<6-> PKI, Shared Tokens
+        \end{itemize}
+    \end{column}
+  \end{columns}
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+\frametitle{CAP Theorem}
+  No distributed system is safe from network failures, thus network partitioning generally has to be tolerated. In the presence of a partition, one is then left with two options: consistency or availability.
+  \newline
+  \begin{itemize}[<alert@+>]
+    \item Consistency
+    \note[item]{}
+    \onslide<2->{
+    \item Availability
+    }
+  \onslide<3->{
+  \item Partition Tolerance
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    \Huge{What if we could make the network more reliable and secure?}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    %add logo
+    \Huge{SCiON}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What's SCiON?}
+  SCION is the first clean-slate Internet architecture designed to provide route control, failure isolation, and explicit trust information for end-to-end communication.
+\end{frame}
+
+\begin{frame}
+\frametitle{SCiON Capabilities}
+  % TODO: Incorprate busines value to each capability, maybe a grid?
+  \begin{itemize}[<alert@+>]
+    \item Security: Authenticated Control Plane and Resilience Against Path Hijacks
+    \note[item]{}
+    \onslide<2->{
+    \item Stability: Native multipath capability at the network level with rapid path failover
+    }
+    \onslide<3->{
+    \item Control: Path-awareness for end hosts
+    }
+    \onslide<4->{
+    \item Protection: Hidden paths and sender-based path selection
+    }
+    \onslide<5->{
+    \item Performance: SCiON applications can select the best paths based on latency, bandwidth, and other criteria
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    %add logo
+    \Huge{Porting NATS to SCiON}
+  \note[item]{Combining the NATS message bus with SCiON}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{NATS Evaluation}
+    \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \pause
+        Pros:
+        \begin{itemize}
+            \item<3-> Golang
+            \item<4-> Active Development
+            \item<5-> Short list of dependencies
+            \item<6-> Clean codebase
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+        Cons:
+        \pause
+        \begin{itemize}
+            \item<7-> TCP-only
+            \item<8-> URL Formatting configurations: "nats://..."
+            \item<9-> Multiple Server Components
+        \end{itemize}
+    \end{column}
+  \end{columns}
+  \note[item]{Uses a publish/subscribe model, subscribers and senders dont need to be aware of each other, FIFO ordering isnt guaranteed}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SCiON NATS Listener (Server)}
+  \begin{center}
+    \small QUIC(UDP) session for transport
+    \lstinputlisting[frame=single]{snippets/natsListen.go}
+  \end{center}
+  \note[item]{SCiON does not have an implementation of TCP on top of SCION}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SCiON NATS Client}
+  \begin{center}
+    \lstinputlisting[frame=single]{snippets/natsDialScion.go}
+  \end{center}
+  %\begin{center}
+  %\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{URL Formatting}
+  \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \lstinputlisting[frame=single]{snippets/mangledurl.go}
+      \end{column}
+      \begin{column}{0.48\linewidth}
+        \lstinputlisting[frame=single]{snippets/panmangle.go}
+      \end{column}
+  \end{columns}
+  \begin{center}
+    \small{nats://17-ffaa:1:1,10.10.0.1:4222 => nats://[17-ffaa:1:1,10.10.0.1]:4222}
+  \end{center}
+  %\begin{center}
+  %\end{center}
+\end{frame}
+\begin{frame}
+\frametitle{SCiON NATS Current State}
+  \begin{itemize}[<+->]
+    % TODO: Add a note about Pan QUIC
+    \onslide<1->{
+    \item NATS is SCiON enabled via Path-aware SCiON Library
+    }
+    \note[item]{}
+    \onslide<2->{
+    \begin{itemize}
+    % Show an example per each part of the port
+    \item<.-> NATS Client
+    \item<.-> NATS Server
+    \item<.-> NATS Server Clustering
+    }
+    \end{itemize}
+    \onslide<3->{
+    % Show an example
+    \item URL portablility has a few shortcomings
+    }
+    \onslide<4->{
+    \item Maintained fork of upstream NATS
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    % Need to gather some metrics
+    \Huge{Results}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{center}
+    % show a SCiON topology with multiple hops:
+    % 1) Simulate a failure
+    % 2) Introduce less than ideal conditions into a link
+    \Huge{Demo}
+  \end{center}
+\end{frame}
+
+\iffalse
+\fi
+\begin{frame}
+\frametitle{Whats Next - Nats Project}
+  \begin{itemize}[<+->]
+    \onslide<1->{
+    \item SCiON enabled NATS service
+    }
+    \onslide<2->{
+    \item NATS Server "customDialer"
+    \note[item]{Upstream these changes, ideal via the customDialer}
+    }
+    \onslide<3->{
+    \item Support the full set of NATS server capabilities: e.g. SuperCluster
+    }
+    \onslide<4->{
+    \item Multipath Support for NATS Control \& Data Plane
+    \note[item]{imagine being able to send control plane messages via low latency links and data plane traffic via high bandwidth links}
+    }
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Whats Next - SCiON}
+  \begin{itemize}[<+->]
+    \onslide<1->{
+    \item Application Porting Guide
+    }
+    \onslide<2->{
+    \item Dedicated PAN Library
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions}
+  {\large \textbf{@sarcasticadmin}}
+  \newline
+  \newline
+  {\large \textbf{https://github.com/MartincoitNetworks/nats-server/tree/rmain}}
+\end{frame}
+\end{document}

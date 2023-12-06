@@ -23,6 +23,10 @@
               beamer
               # Theme reqs
               beamertheme-metropolis
+              beamertheme-pure-minimalistic
+              silence
+              fira
+              fontaxes
               # Adding necessary fonts, specifically: phvr7t
               collection-fontsrecommended
               pgfopts
@@ -48,6 +52,7 @@
             buildInputs = with pkgs;[
               texLive
               rubber
+              zathura
             ];
           };
           present =
