@@ -11,6 +11,8 @@
 
 \usepackage{listings}
 \lstset{language=Go,
+  numbers=left,
+  tabsize=2,
   basicstyle=\ttfamily\tiny,
   keywordstyle=\color{blue}\ttfamily,
   stringstyle=\color{red}\ttfamily,
@@ -194,7 +196,7 @@
         \pause
         Pros:
         \begin{itemize}
-            \item<3-> Golang 
+            \item<3-> Golang
             \item<4-> Active Development
             \item<5-> Short list of dependencies
             \item<6-> Clean codebase
@@ -214,9 +216,38 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{URL Formatting}
+  \frametitle{SCiON NATS Listener (Server)}
+  \begin{center}
+    \small QUIC(UDP) session for transport
+    \lstinputlisting[frame=single]{snippets/natsListen.go}
+  \end{center}
+  \note[item]{SCiON does not have an implementation of TCP on top of SCION}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SCiON NATS Client}
+  \begin{center}
+    \lstinputlisting[frame=single]{snippets/natsDialScion.go}
+  \end{center}
   %\begin{center}
-    \lstinputlisting{snippets/mangledurl.go}
+  %\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{URL Formatting}
+  \begin{columns}[t]
+      \begin{column}{0.48\linewidth}
+        \lstinputlisting[frame=single]{snippets/mangledurl.go}
+      \end{column}
+      \begin{column}{0.48\linewidth}
+        \lstinputlisting[frame=single]{snippets/panmangle.go}
+      \end{column}
+  \end{columns}
+  \begin{center}
+    \small{nats://17-ffaa:1:1,10.10.0.1:4222 => nats://[17-ffaa:1:1,10.10.0.1]:4222}
+  \end{center}
+  %\begin{center}
   %\end{center}
 \end{frame}
 \begin{frame}
